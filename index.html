@@ -1,0 +1,295 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<style>
+	
+        body {
+           /* width: 400px;
+            height: 400px;*/
+            background-color: pink;
+           /* background-image: url("http://127.0.0.1:7776/62D83230FD8274DE019E7D118702E487.png");*/
+            /*background: url("img/2.jpg") 10% 20% no-repeat;!*图片从左往右移动的百分比大小，从上往下百分比大小，重复方式 换成数值同样如此，在这里没有调整大小的方法*!*/
+            /*background-position: 10% 40%;*/
+            /*这个是按从左往右，从上往下的百分比位置进行调整*/
+            background-size: 100% 100%;
+            /*按比例缩放*/
+            /*background-size: 100px 100px;!*这个是按数值缩放*!*/
+            background-repeat: no-repeat;
+            /*还有repeat-x,y等*/
+        }
+		#backgroundImage {
+			border: none;
+			height: 100%;
+			pointer-events: none;
+			position: fixed;
+			top: 0;
+			visibility: visible;
+			width: 100%;
+		  }
+	</style>
+<head>
+	<title>Strobe Media Playback</title>
+	<script type="text/javascript" src="swfobject.js"></script>
+	<script type="text/javascript" class="video1">
+		var loc = window.location.host
+
+		// Create a StrobeMediaPlayback configuration
+		var parameters =
+		{
+			src: "http://" + loc + "/vod/big_buck_bunny.f4m"
+			, autoPlay: true
+			, controlBarAutoHide: false
+			, javascriptCallbackFunction: "onJavaScriptBridgeCreated"
+		};
+		
+
+		// Embed the player SWF:
+		swfobject.embedSWF
+			("StrobeMediaPlayback.swf"
+				, "strobeMediaPlayback"
+				, 1280
+				, 720
+				, "10.1.0"
+				, {}
+				, parameters
+				, { allowFullScreen: "true" }
+				, { name: "strobeMediaPlayback" }
+			);
+
+
+		function onCurrentTimeChange(time, playerId) {
+			document.getElementById("currentTime").innerHTML = time;
+		}
+
+		function onDurationChange(time, playerId) {
+			document.getElementById("duration").innerHTML = time;
+		}
+		var player = null;
+		function onJavaScriptBridgeCreated(playerId) {
+		
+			if (player == null) {
+				player = document.getElementById(playerId);
+				// Add event listeners that will update the
+				player.addEventListener("currentTimeChange", "onCurrentTimeChange");
+				player.addEventListener("durationChange", "onDurationChange");
+
+				// Pause/Resume the playback when we click the Play/Pause link
+				document.getElementById("play-pause").onclick = function () {
+					var state = player.getState();
+					if (state == "ready" || state == "paused") {
+						player.play2();
+					}
+					else
+						if (state == "playing") {
+							player.pause();
+						}
+					return false;
+				};
+			}
+		}
+	</script>
+
+</head>
+
+<body>
+	<!-- <iframe id="backgroundImage" src="http://127.0.0.1:7776/image/62D83230FD8274DE019E7D118702E487.png"></iframe> -->
+	<div class="header">
+	<span id="LoginP" class="login_form">
+		用户名：<input id="txtUserName" />
+		密 码:<input id="txtUserPass" />
+		<button class="sub">登录</button> 
+	</span>
+	
+	<!-- <table border="1" width="200px" id="table_user" class="tbu" style="display:none">
+        <td  >Welcome!</td>
+		<button class="logout" id="logout_id" style="display:none">退出登录</button>
+	 </table> -->
+	 <div border="1" width="200px" id="table_user" class="tbu" style="display:none">
+        <td>Welcome!</td>
+	 </div>
+	 <button class="logout" id="logout_id" style="display:none">退出登录</button>
+	</div>
+	<!-- <script>
+	
+	</script> -->
+
+	<div class="video2">
+		<div align="center" id="strobeMediaPlayback">
+			<p>这个网址是var/www/index.html!</p>
+		</div>
+	</div>
+	<div align="center" class="mb-3">
+		<label for="color">弹幕颜色</label>
+		<input class="form-control form-control-color" type="color" id="color" maxlength="7" size="7" width="100"
+			value="#FFFFFF" onchange="changeColor()" onkeyup="changeColor()">
+		<label for="randomcolor"></label><input type="checkbox" id="randomcolor">使用随机颜色</input>
+		<select name='danmaku_position' id="choose">
+			<option value=1 selected> 随机弹幕 </option>
+			<option value=2> 顶端弹幕 </option>
+			<option value=3> 底端弹幕 </option>
+		</select>
+	</div>
+	<div align="center">
+		<textarea id="danmakutext" type="text" placeholder="来发弹幕吧~"></textarea>
+		<button class="send">Send</button>
+	</div>
+	<div align="left">
+		<textarea id="commenttext" type="text" placeholder="来发评论吧~"></textarea>
+		<button class="sendComment">Send</button>
+	</div>
+	<div class="commentbox">
+		<h2>评论区区域</h2>
+	
+</div>
+
+	<script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+	<script>
+
+
+		Login_name=""
+
+		$(".sub").click(function () {
+			Login_name=document.getElementById("txtUserName").value
+			if(Login_name==""){
+		
+				alert("Please dont use blank name!")}
+			else{
+			document.getElementById("LoginP").style.display="none";
+			const a = $("<td id=\"now_lod\">" + Login_name + "</td>");
+			$(".tbu").append(a);
+			document.getElementById("table_user").style.display="block";
+			document.getElementById("logout_id").style.display="block";}
+		});
+
+	
+		$(".logout").click(function () {
+			var ddd=$(".tbu");
+			var div = document.getElementById("now_lod");
+			div.parentNode.removeChild(div);
+			//$(".tbu").removeChild($(".tbu").last())   //难点
+			document.getElementById("LoginP").style.display="block";
+			document.getElementById("logout_id").style.display="none";
+			document.getElementById("table_user").style.display="none";
+			Login_name="";
+		});
+
+		//退出登录
+		const timers = [];
+		const jqueryDom = createDanmaku('第一条弹幕'); // test danmaku, delete it as you like
+		addInterval(jqueryDom);
+
+		var websocket = new WebSocket('ws://localhost:8765/')
+		websocket.onopen = function () {
+			console.log('ws连接状态：' + websocket.readyState);
+		}
+
+		websocket.onmessage = function (d) {
+			var jsonObj = jQuery.parseJSON(d.data);
+			if (jsonObj["Type"] == "history") {
+				for (var c in jsonObj["Text"]) {
+					createComment(jsonObj["Text"][c],jsonObj["User"][c]);
+				}
+				//data[history]=1
+				//data[type]==danmaku,addInterel
+			} else if (jsonObj["Type"] == "danmu") {
+				const rec_danmuku = createDanmaku(jsonObj["Text"]);
+				addInterval(rec_danmuku);
+			}
+			else if (jsonObj["Type"] == "comment") {
+				createComment(jsonObj["Text"],jsonObj["User"]);
+			}
+			//data[type]=comment
+			//addComment
+		}
+		websocket.onclose = function () {
+			console.log('close');
+		}
+
+		$(".send").on("click", function () {   //danmu
+			if(Login_name==''){
+				alert("Please Log in first!")
+			}else{
+			var jsonObj = { "Type": "danmu", "Text": document.getElementById("danmakutext").value }
+			websocket.send(JSON.stringify(jsonObj));
+		}
+		});
+		$(".sendComment").on("click", function () { //send comment
+			if(Login_name==''){
+				alert("Please Log in first!")
+			}else{
+			var jsonObj = { "Type": "comment", "Text": document.getElementById("commenttext").value,"User":Login_name }
+			websocket.send(JSON.stringify(jsonObj));
+		}
+		});
+		const top_tem = 550;
+		function createDanmaku(text) {
+			const jqueryDom = $("<div class='bullet'>" + text + "</div>");
+			let fontColor = "rgb(255,255,255)"
+			fontColor = "rgb(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + ")";
+			if (!document.getElementById("randomcolor").checked)
+				fontColor = document.getElementById("color").value
+			const fontSize = (13 + Math.floor(Math.random() * 30)) + "px";
+			let top = (Math.floor(Math.random() * 400)+40) + "px";
+			const left = ($(".video2").width() - 300) + "px";
+			jqueryDom.css({
+				"position": 'absolute',
+				"color": fontColor,
+				"font-size": fontSize,
+				"left": left,
+				"top": top,
+			});
+			$(".video2").append(jqueryDom);
+			return jqueryDom;
+		}
+		function addInterval(jqueryDom) {
+			if (document.getElementById("choose").value === '1') {
+				speed = 1.5
+				let left = jqueryDom.offset().left - $(".video2").offset().left;
+				const timer = setInterval(function () {
+					left -= speed;
+					if (document.getElementById("strobeMediaPlayback").getState() == "paused") left += speed;  //视频暂停的时候可以不动
+					jqueryDom.css("left", left + "px"); //重新定位
+					if (jqueryDom.offset().left + jqueryDom.width() < $(".video2").offset().left) {
+						jqueryDom.remove();
+						clearInterval(timer);
+					}
+				}, 5); // set delay as 5ms,which means the danmaku changes its position every 5ms
+				timers.push(timer);
+			}
+			if (document.getElementById("choose").value === '2') {
+				jqueryDom.css("left", 650 + "px");
+				jqueryDom.css("top", Math.floor(Math.random() * 100) + 50 + "px");
+				setTimeout(function () {
+					jqueryDom.remove();
+					clearInterval(timer)
+				}, 4000);
+			}
+			if (document.getElementById("choose").value === '3') {
+				jqueryDom.css("left", 650 + "px");
+				jqueryDom.css("top", Math.floor(Math.random() * 100) + 600 + "px");
+				setTimeout(function () {
+					jqueryDom.remove();
+					clearInterval(timer)
+				}, 4000);
+			}
+		}
+		function createComment(text, username) {
+			
+			username1="\n                ------"+username
+			const singleComment = $("<br>" + text +username1+ "</br>");
+			const fontColor = "rgb(0,0,0)"
+			const fontSize = "20px";
+			singleComment.css({
+				"color": fontColor,
+				"font-size": fontSize,
+			});
+			$(".commentbox").append(singleComment);
+		
+	
+			//return singleComment;
+		}
+	</script>
+
+</body>
+
+</html>
